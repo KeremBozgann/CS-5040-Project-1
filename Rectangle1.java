@@ -1,8 +1,11 @@
 
-/* A significant part of this code are prepared with the help of the course material 
- * at OpenDSA*/
-// module 2.7. :Reading Input (from Files or Otherwise)
-// import student.TestCase;
+/*
+ * A significant part of this code are prepared with the help of/based on the
+ * course material
+ * at OpenDSA, especially the code from the section 15.1. Skip Lists and module
+ * 2.7. :Reading Input
+ */
+
 import java.io.File;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
@@ -28,19 +31,21 @@ public class Rectangle1 {
                 cmd = cmd.trim();
                 // replace multiple white spaces with single white space:
                 cmd = cmd.replaceAll(" +", " ");
+
                 System.out.println(
                     "================================================");
                 System.out.println("Processing command: " + cmd);
                 System.out.println("");
+
                 // Split cmd to componenets
                 String[] command_args;
                 command_args = cmd.split(" ");
-// for (int i = 0 ; i<command_args.length; i++)
-// System.out.println(command_args[i]);
 
                 skip_list = process_the_command(command_args, cmd, skip_list);
-            }
 
+            }
+            if (scan != null)
+                scan.close();
         }
         catch (FileNotFoundException e) {
             System.out.println(e);
@@ -53,12 +58,14 @@ public class Rectangle1 {
         String[] command_args,
         String cmd,
         SkipList<String, String> skip_list) {
-        // Switch the first element
 
+        // Switch the first in the command line
         switch (command_args[0]) {
             case "insert":// Found an add command
 
-                // check if the command args are correct:
+                // test to check if the last 4 command args are integers (this
+                // test was not really necessary to satisfy project
+                // requirements):
                 boolean test_input = checkInsertArgs(command_args);
                 if (!test_input) {
                     System.out.println(
@@ -67,9 +74,14 @@ public class Rectangle1 {
                     break;
                 }
                 else {
+
+                    // get rectangle name:
                     String rect_name = command_args[1];
+                    // get rectangle coords and dims
                     String rect_vals = getRectVal(command_args);
 
+                    // check if rectangle is in world box and have positive
+                    // dims:
                     if (Integer.parseInt(command_args[2]) < 0 || Integer
                         .parseInt(command_args[3]) < 0 || Integer.parseInt(
                             command_args[4]) <= 0 || Integer.parseInt(
@@ -89,13 +101,19 @@ public class Rectangle1 {
                 }
 
                 break;
-            case "remove":// Found a delete command
+            case "remove":
+
+                // remove by name:
                 if (command_args.length == 2 && !isInteger(command_args[1])) {
                     skip_list.removeByName(command_args[1]);
                 }
+                // remove by coords (again some non-required input check sinside
+                // the
+                // following if):
                 else if (command_args.length == 5 && isInteger(command_args[1])
                     && isInteger(command_args[2]) && isInteger(command_args[3])
                     && isInteger(command_args[4])) {
+                    // combine integer args in a string:
                     String rect_coords = getRectVal(command_args);
                     skip_list.removeByCoords(rect_coords);
                 }
@@ -110,6 +128,7 @@ public class Rectangle1 {
                 break;
 
             case "regionsearch":
+                // check if rectangle satisfies requirements:
                 if (Integer.parseInt(command_args[3]) <= 0 || Integer.parseInt(
                     command_args[4]) <= 0) {
                     System.out.println("");
@@ -144,18 +163,23 @@ public class Rectangle1 {
 
         System.out.println("");
         System.out.println("Intersections pairs:");
+        // outer loop:
         for (int i = 0; i < size; i++) {
             x = x.forward[0];
             String x_val = x.element();
+            // get upper-right and lower-left coordinates in an integer array:
             int[] x_coords = getUpperRightLowerLeft(x_val);
             SkipNode<String, String> y = head;
-
+            // inner loop (note that j is iterated until i, since it is
+            // redundant
+            // to compare 2 rectangles twice
             for (int j = 0; j < i; j++) {
                 y = y.forward[0];
                 String y_val = y.element();
-
+                // get coordinates:
                 int[] y_coords = getUpperRightLowerLeft(y_val);
 
+                // using coords, checki f rectangles overlap:
                 if (rectsDoNotOverlap(x_coords, y_coords))
 
                     continue;
@@ -178,14 +202,17 @@ public class Rectangle1 {
         System.out.println("Rectangles intersecting region " + "( " + val + ")"
             + " :");
 
+        // iterate over all rects:
         for (int i = 1; i <= skip_list.getSize(); i++) {
             x = x.forward[0];
             String x_val = x.element();
 
+            // get coords:
             int[] coords_x = getUpperRightLowerLeft(x_val);
 
             int[] coords_rect = getUpperRightLowerLeft(val);
 
+            // check if overlap
             if (rectsDoNotOverlap(coords_x, coords_rect))
                 continue;
             // means no overlapping
@@ -195,6 +222,8 @@ public class Rectangle1 {
     }
 
 
+    // if even one of the following is satisfied, then rectangles do not
+    // overlap.
     public static boolean rectsDoNotOverlap(int[] coords_x, int[] coords_y) {
         return coords_x[1] >= coords_y[3] || coords_y[1] >= coords_x[3]
             || coords_x[0] >= coords_y[2] || coords_y[0] >= coords_x[2];
@@ -205,6 +234,7 @@ public class Rectangle1 {
         String[] x_val_list = x_val.split(", ");
         int x_l = Integer.parseInt(x_val_list[0]);
         int x_u = Integer.parseInt(x_val_list[1]);
+        // add width and height to upperleft coords to get lower right coords:
         int x_r = Integer.parseInt(x_val_list[0]) + Integer.parseInt(
             x_val_list[2]);
         int x_d = Integer.parseInt(x_val_list[1]) + Integer.parseInt(
@@ -215,12 +245,7 @@ public class Rectangle1 {
     }
 
 
-    public static void intersections() {
-
-    }
-
-
-    // check if valid arguments are given after "insert" command:
+    // check if last arguments are integer following insert command:
     public static boolean checkInsertArgs(String[] command_args) {
         if (command_args.length != 6) {
             System.out.println(
@@ -238,7 +263,7 @@ public class Rectangle1 {
     // checks if given string has integer value
     public static boolean isInteger(String s) {
         try {
-            int i = Integer.parseInt(s);
+            Integer.parseInt(s);
             return true;
         }
         catch (NumberFormatException e) {
@@ -248,6 +273,7 @@ public class Rectangle1 {
     }
 
 
+    // combine coords and dims into string:
     public static String getRectVal(String[] command_args) {
         String rect_values = "";
         for (int i = command_args.length - 4; i <= command_args.length
@@ -260,7 +286,5 @@ public class Rectangle1 {
 
         return rect_values;
     }
-
-// Scanner scan = new Scanner (new )
 
 }

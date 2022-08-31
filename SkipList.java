@@ -1,3 +1,6 @@
+
+// reference: Significant amount of this taken from OpenDSA code
+// from the section 15.1. Skip Lists
 import java.util.Random;
 
 class SkipList<K extends Comparable<K>, E extends Comparable<E>> {
@@ -31,7 +34,8 @@ class SkipList<K extends Comparable<K>, E extends Comparable<E>> {
             System.out.println("Rectangles found:");
             System.out.println("( " + x.key() + ", " + x.element() + " )");
 
-            // check if there are rectangles with the same name
+            // check if there are rectangles with the same name, if there are,
+            // print them too
             if (x != null)
                 while (x_dup.forward[0] != null && (x_dup.forward[0].key()
                     .compareTo(key) == 0)) {
@@ -43,10 +47,6 @@ class SkipList<K extends Comparable<K>, E extends Comparable<E>> {
         else
             System.out.println("Rectangle not found: " + "(" + key + ")");
 
-//
-// if ((x != null) && (x.key().compareTo(key) == 0)) return x.element(); // Got
-// it
-// else return null; // Its not there
     }
 
 
@@ -94,6 +94,7 @@ class SkipList<K extends Comparable<K>, E extends Comparable<E>> {
         SkipNode<K, E>[] update = new SkipNode[level + 1];
         SkipNode<K, E> x = head;
 
+        // search for key and prepare update:
         for (int i = level; i >= 0; i--) { // Find insert position
             while ((x.forward[i] != null) && (x.forward[i].key().compareTo(
                 key) < 0))
@@ -101,6 +102,8 @@ class SkipList<K extends Comparable<K>, E extends Comparable<E>> {
             update[i] = x; // Track end at level i
         }
         x = x.forward[0];
+        // if final node we arrived matches key, remove links from this node and
+        // rearrange links to point to next element in skiplist
         if ((x != null) && (x.key().compareTo(key) == 0)) {
             int level_x = x.getLevel();
             for (int i = level_x; i >= 0; i--) { // Splice into list
@@ -118,8 +121,11 @@ class SkipList<K extends Comparable<K>, E extends Comparable<E>> {
     }
 
 
+    // first search for coordinates, using only the base level of the skip list
+    // (since list is ordered according to name and not coords)
     public void removeByCoords(E val) {
 
+        // if size is zero, cannot remove anything:
         if (this.size == 0) {
 
             System.out.println("Skiplist is empty");
@@ -129,6 +135,7 @@ class SkipList<K extends Comparable<K>, E extends Comparable<E>> {
 
         SkipNode<K, E> x = head.forward[0];
         System.out.println("");
+        // search for the coords starting from beginning:
         for (int i = 0; i < size; i++) { // Find insert position
             if (x.element().compareTo(val) != 0)
                 x = x.forward[0];
@@ -140,7 +147,7 @@ class SkipList<K extends Comparable<K>, E extends Comparable<E>> {
         }
         // The following means that search reached the end of the skiplist
         // without
-        // finding searched coords:
+        // finding searched coords, report it:
         if (x == null) {
             System.out.println("Reached the end of the list");
             System.out.println("Rectangle not removed: " + val);

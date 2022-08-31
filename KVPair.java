@@ -1,5 +1,8 @@
 /* *** ODSATag: KVPair *** */
 // KVPair class definition
+
+// reference: taken from dsa code in section 15.1. Skip Lists
+
 public class KVPair<K extends Comparable<K>, E>
     implements Comparable<KVPair<K, E>> {
     K theKey;

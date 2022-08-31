@@ -1,0 +1,35 @@
+
+insert r_r          -1 -20 3 4
+  insert rec        7 -8 1 3
+insert virtual_rec0 1 1 0 0
+insert virtual_REC0 0 0 11 0
+insert inExistRec_0 1 1 -1 -2
+
+ regionsearch   11 11                 0 0
+
+intersections
+
+dump
+
+search r_r
+remove r_r
+remove 1 1 0 0
+  
+regionsearch   -5 -5 20 20 
+
+
+regionsearch   5 5 0 0 
+
+
+insert goodRect  5  3 56 56
+insert goodRect2 111  400 20 20
+insert goodRect3 25  3 6 6
+
+dump
+
+remove goodRect2
+intersections
+
+search goodRect3
+
+regionsearch  -900 5        0   5000

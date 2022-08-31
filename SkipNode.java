@@ -1,3 +1,5 @@
+// reference: taken from dsa code in section 15.1. Skip Lists
+
 class SkipNode<K extends Comparable<K>, E> {
     private KVPair<K, E> rec;
     private int level;

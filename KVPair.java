@@ -5,8 +5,8 @@
 
 public class KVPair<K extends Comparable<K>, E>
     implements Comparable<KVPair<K, E>> {
-    K theKey;
-    E theVal;
+    private K theKey;
+    private E theVal;
 
     KVPair(K k, E v) {
         theKey = k;

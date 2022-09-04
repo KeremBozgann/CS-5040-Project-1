@@ -3,7 +3,7 @@
 class SkipNode<K extends Comparable<K>, E> {
     private KVPair<K, E> rec;
     private int level;
-    SkipNode<K, E>[] forward;
+    private SkipNode<K, E>[] forward;
 
     public E element() {
         return rec.value();
@@ -33,6 +33,15 @@ class SkipNode<K extends Comparable<K>, E> {
 
     public int getLevel() {
         return this.level;
+    }
+
+
+    public SkipNode<K, E>[] getForward() {
+        return this.forward;
+    }
+    
+    public KVPair<K, E> getRec() {
+        return this.rec;
     }
 
 }
